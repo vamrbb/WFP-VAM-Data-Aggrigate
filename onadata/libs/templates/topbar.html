@@ -64,9 +64,9 @@
               {% if user.is_superuser or user.is_staff %}
             <li><a href="{% url "onadata.apps.main.views.members_list" %}">{% trans "People" %}</a></li>
               {% endif %}
-            <!-- <li><a href="/resources/">{% trans "Resources" %}</a></li> -->
+            <!-- <li><a href="/resources/">{% trans "Resources" %}</a></li> 
             <li><a href="{% url "onadata.apps.main.views.syntax" %}">{% trans "Syntax" %}</a></li>
-            <li><a href="{% url "onadata.apps.main.views.support" %}">{% trans "Support" %}</a></li>
+            <li><a href="{% url "onadata.apps.main.views.support" %}">{% trans "Support" %}</a></li>-->
           </ul>
           <ul class="nav pull-right">
             {% if user.is_authenticated %}
