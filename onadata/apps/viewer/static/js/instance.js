@@ -248,7 +248,7 @@ function loadData(context, query, canEdit)
     $.getJSON(mongoAPIUrl, {'query': query, 'limit':1})
             .success(function(data){
                 reDraw(context, data[0], canEdit);
-
+		drawMap();
                 //ADD EDIT AND BUTTON CHECK PERMISSION
                 updateButtons(data[0]);
 
@@ -358,9 +358,10 @@ function updatePrevNextControls(data)
                 }
             });
 }
-
+var geodataArray = [];
 function reDraw(context, data, canEdit)
 {
+geodataArray = [];
     // make sure we have some data, if the id was in valid we would gte a blank array
     if(data)
     {
@@ -384,6 +385,14 @@ function reDraw(context, data, canEdit)
                 {
                     var href = _attachment_url(value, 'medium');
                     value = $('<div>').append($('<a>').attr('href', href).attr('target', '_blank').append(value)).html();
+                }else if(questions[cleanKey].type == 'geotrace' || questions[cleanKey].type == 'geoshape' || questions[cleanKey].type == 'geopoint')
+                {
+                    //console.log(questions[cleanKey].type);
+                    var tempData = value;
+		    var map_id = 'map-'+geodataArray.length
+	            value  = $('<div>').append("<div style='width:100%; height:400px;' id='"+map_id+"'></div>").html();
+                    //geodataArray.push({questions[cleanKey].type:tempData});
+		    geodataArray.push({'type':questions[cleanKey].type,'value':tempData});
                 }
             }
 
@@ -429,7 +438,54 @@ function reDraw(context, data, canEdit)
     }
 }
 
+function drawMap(){
+	for (i = 0; i < geodataArray.length; i++) { 
+		var map_id = 'map-'+i;		
+         	var map = L.map(map_id);
+                L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors',
+                        maxZoom: 18
+                }).addTo(map);
+		var circleStyle = {
+    			color: '#fff',
+    			border: 8,
+    			fillColor: '#ff3300',
+    			fillOpacity: 0.9,
+    			radius: 8,
+    			opacity: 0.5
+			};
+                if (geodataArray[i].type == 'geopoint'){
+			var valueArray  = geodataArray[i].value.split(" ");
+			var latLng = [valueArray[0],valueArray[1]];
+			L.circleMarker(latLng, circleStyle).addTo(map);
+			map.setView(latLng, 15);
+		}else if ((geodataArray[i].type == 'geoshape') || (geodataArray[i].type == 'geotrace')){
+			var valueArray  = geodataArray[i].value.split(";");
+			var latLngArray = []
+			console.log(valueArray);
+			for (j = 0; j < valueArray.length; j++) {
+				if (valueArray[j].split(" ").length > 1){
+					var latlng = L.latLng(valueArray[j].split(" ")[0], valueArray[j].split(" ")[1]);
+					latLngArray.push(latlng);
+				}
+				
+			}
+			var firstPoint = latLngArray[0];
+			var lastPoint = latLngArray[latLngArray.length -1];
+			if ((firstPoint.lat == lastPoint.lat) && (firstPoint.lng == lastPoint.lng)){
+				var polygon = L.polygon(latLngArray);
+				polygon.addTo(map);		
+				map.fitBounds(polygon.getBounds());
+			}else{
+				var polyline = L.polyline(latLngArray);
+				polyline.addTo(map);
+				map.fitBounds(polyline.getBounds());
+			}
+		}
+	}
 
+
+}
 function editNote(obj){
     var note = $(obj).data('note')
         , note_id = $(obj).data('note-id');

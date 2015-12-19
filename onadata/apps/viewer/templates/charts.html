@@ -14,7 +14,7 @@
   <div class="page-header">
       <h1>Charts <small><a href="{% url "onadata.apps.main.views.show" xform.user.username xform.id_string %}">{{ xform.title }}</a></small></h1>
   </div>
-
+{{ summaries }}
 {% charts_snippet summaries %}
 
 </section>
@@ -32,6 +32,7 @@
       var page = {{ page }};
       $(document).ready(function () {
         moreCharts(chart_url, page);
+	
       });
     </script>
 {% endblock %}

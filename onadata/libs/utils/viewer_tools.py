@@ -218,7 +218,7 @@ def create_attachments_zipfile(attachments):
     return tmp
 
 
-def _get_form_url(request, username, protocol='https'):
+def _get_form_url(request, username, protocol='http'):
     if settings.TESTING_MODE:
         http_host = settings.TEST_HTTP_HOST
         username = settings.TEST_USERNAME

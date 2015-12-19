@@ -13,8 +13,8 @@ from staging_example import *  # nopep8
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': 'onadata',
-        'USER': 'onadata',
+        'NAME': '',
+        'USER': 'postgres',
         'PASSWORD': '',
         'HOST': '127.0.0.1',
         'OPTIONS': {
@@ -24,7 +24,9 @@ DATABASES = {
     }
 }
 
+POSTGIS_VERSION = (2,1,7)
 DATABASE_ROUTERS = []  # turn off second database
-
+DEBUG = True
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost','data.geomarvel.io']
 # Make a unique unique key just for testing, and don't share it with anybody.
 SECRET_KEY = 'mlfs33^s1l4xf6a36$0#j%dd*sisfoi&)&4s-v=91#^l01v)*j'

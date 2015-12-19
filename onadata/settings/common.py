@@ -80,7 +80,7 @@ USE_L10N = True
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
 # Examples: "http://media.lawrence.com/media/", "http://example.com/media/"
-MEDIA_URL = 'http://localhost:8000/media/'
+MEDIA_URL = 'http://data.geomarvel.io/media/'
 
 # Absolute path to the directory static files should be collected to.
 # Don't put anything in this directory yourself; store your static files
@@ -93,12 +93,12 @@ STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static')
 STATIC_URL = '/static/'
 
 # Enketo URL
-ENKETO_URL = 'https://enketo.formhub.org/'
-ENKETO_API_SURVEY_PATH = '/api_v1/survey'
-ENKETO_API_INSTANCE_PATH = '/api_v1/instance'
+ENKETO_URL = 'http://enketo.geomarvel.io/'
+ENKETO_API_SURVEY_PATH = '/api/v2/survey'
+ENKETO_API_INSTANCE_PATH = '/api/v2/instance'
 ENKETO_PREVIEW_URL = ENKETO_URL + 'webform/preview'
-ENKETO_API_TOKEN = ''
-ENKETO_API_INSTANCE_IFRAME_URL = ENKETO_URL + "api_v1/instance/iframe"
+ENKETO_API_TOKEN = 'EERTIUCJSHDGKHD234325'
+ENKETO_API_INSTANCE_IFRAME_URL = ENKETO_URL + "/api/v2/instance/iframe"
 
 # Login URLs
 LOGIN_URL = '/accounts/login/'
@@ -457,7 +457,7 @@ BINARY_SELECT_MULTIPLES = False
 NA_REP = 'n/a'
 
 # specifically for site urls sent to enketo
-ENKETO_PROTOCOL = 'https'
+ENKETO_PROTOCOL = 'http'
 
 # MongoDB
 if MONGO_DATABASE.get('USER') and MONGO_DATABASE.get('PASSWORD'):

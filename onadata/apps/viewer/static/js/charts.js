@@ -1,6 +1,6 @@
 (function(){
     var root = this;
-
+debugger
     root.ChartGridTemplate = _.template('<table class="table table-striped table-bordered table-condensed stats-table">' +
           '<thead>' +
             '<% if(show_header) { %>' +

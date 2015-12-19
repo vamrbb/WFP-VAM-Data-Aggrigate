@@ -54,16 +54,17 @@ def utc_time_string_for_javascript(date_string):
 def get_choice_label(choices, string):
     labels = []
 
-    if string and choices:
+    if string:
         for name in string.split(' '):
             for choice in choices:
                 if choice['name'] == name:
                     labels.append(choice['label'])
                     break
+
     return labels
 
 
-def build_chart_data_for_field(xform, field, language_index=0, choices=None):
+def build_chart_data_for_field(xform, field, language_index=0):
     # check if its the special _submission_time META
     if isinstance(field, basestring) and field == common_tags.SUBMISSION_TIME:
         field_label = 'Submission Time'
@@ -85,7 +86,7 @@ def build_chart_data_for_field(xform, field, language_index=0, choices=None):
         field_type = field.type
 
     data_type = DATA_TYPE_MAP.get(field_type, 'categorized')
-    field_name = field.name if not isinstance(field, basestring) else field[0]
+    field_name = field.name if not isinstance(field, basestring) else field
 
     result = get_form_submissions_grouped_by_field(
         xform, field_xpath, field_name)
@@ -93,17 +94,14 @@ def build_chart_data_for_field(xform, field, language_index=0, choices=None):
     # truncate field name to 63 characters to fix #354
     truncated_name = field_name[0:POSTGRES_ALIAS_LENGTH]
     truncated_name = truncated_name.encode('utf-8')
+
     if data_type == 'categorized':
         if result:
-            if field.children:
-                choices = field.children
             for item in result:
                 item[truncated_name] = get_choice_label(
-                    choices, item[truncated_name])
-                if len(item[truncated_name]) > 0:
-                    item[truncated_name] = item[truncated_name][0]
-                else:
-                    item[truncated_name] = 'null'
+                    field.children, item[truncated_name])
+		item[truncated_name] = 'jon'
+
     # replace truncated field names in the result set with the field name key
     field_name = field_name.encode('utf-8')
     for item in result:
@@ -112,6 +110,7 @@ def build_chart_data_for_field(xform, field, language_index=0, choices=None):
             del(item[truncated_name])
 
     result = sorted(result, key=lambda d: d['count'])
+
     # for date fields, strip out None values
     if data_type == 'time_based':
         result = [r for r in result if r.get(field_name) is not None]
@@ -160,3 +159,4 @@ def build_chart_data(xform, language_index=0, page=0):
 
     return [build_chart_data_for_field(xform, field, language_index)
             for field in fields]
+
