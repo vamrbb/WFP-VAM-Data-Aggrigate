@@ -26,7 +26,7 @@ DATABASES = {
 
 POSTGIS_VERSION = (2,1,7)
 DATABASE_ROUTERS = []  # turn off second database
-DEBUG = True
+DEBUG = False
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost','wfp.geomarvel.io']
 # Make a unique unique key just for testing, and don't share it with anybody.
 SECRET_KEY = 'mlfs33^s1l4xf6a36$0#j%dd*sisfoi&)&4s-v=91#^l01v)*j'
