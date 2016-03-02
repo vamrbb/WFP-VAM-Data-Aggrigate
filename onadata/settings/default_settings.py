@@ -15,7 +15,7 @@ DATABASES = {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'NAME': 'onadata_db',
         'USER': 'postgres',
-        'PASSWORD': 'QwePoi!23',
+        'PASSWORD': '',
         'HOST': '127.0.0.1',
         'OPTIONS': {
             # note: this option obsolete starting with django 1.6
