@@ -36,7 +36,7 @@ body {
 }
 /* for fixed top */
 body {
-  padding-top: 55px !important;
+  padding-top: 70px !important;
   overflow:auto;
 }
 .centered, tr td.centered {

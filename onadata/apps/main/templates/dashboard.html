@@ -7,13 +7,8 @@
 <section id="profile">
   <div class="row">
     <div class="span5">
-        <h1>{% blocktrans %}Publish a Form <small>Upload XLSForm</small>{% endblocktrans %}</h1>
-        {% url "tutorial" as tutorial_url %}
-        {% blocktrans %}For a quick introduction on how to publish a form try do download <a href="/examples/forms/tutorial/form.xls">tutorial.xls</a> and publish it.{% endblocktrans %}
-        <br/>
-        <br/>
-        {% url "syntax" as syntax_url %}
-        {% blocktrans %}Learn about the XLSForm syntax <a href="{{ syntax_url }}">here</a> along with more <a href="/examples/">form examples</a>.{% endblocktrans %}
+        <h3>{% blocktrans %}Publish a Form{% endblocktrans %}</h3>
+	<a href="http://xlsform.org" target="_blank">XLSForm Documentation </a>
         <br/>
         <br/>
         <form action="." method="post" enctype="multipart/form-data">
@@ -22,7 +17,6 @@
             <ul class="nav nav-tabs nomarginbottom">
                 <li class="active"><a href="#upload" data-toggle="tab">{% trans "Upload" %}</a></li>
                 <li><a href="#url" data-toggle="tab">{% trans "URL" %}</a></li>
-								<li><a href="#db-chooser" data-toggle="tab">{% trans "Dropbox" %}</a></li>
             </ul>
             <div class="tab-content bordered-side">
                 <div class="tab-pane active" id="upload">
@@ -34,9 +28,6 @@
                     <table class="narrow-labels">
                         {{ form_url.as_table }}
                     </table>
-                </div>
-                <div class="tab-pane" id="db-chooser">
-									<input type="dropbox-chooser" name="dropbox_xls_url" data-link-type="direct" style="visibility: hidden;"/>
                 </div>
             </div>
             </div>

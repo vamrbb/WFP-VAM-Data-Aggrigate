@@ -51,7 +51,7 @@
         </td>
         <td class="centered">{{ submission_count|intcomma }}</td>
         <td class="centered">
-                <a class="btn" href="{% url "onadata.apps.logger.views.enter_data" xform.user.username xform.id_string %}"><i class="icon-edit"></i> {% trans "Web" %}</a>
+                <button disabled class="btn"><i class="icon-edit"></i> {% trans "Web" %}</button>
         </td>
         <td class="centered">
                 {% if not xform.encrypted and has_instances_with_geopoints %}

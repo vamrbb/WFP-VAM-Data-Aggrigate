@@ -232,7 +232,7 @@ def profile(request, username):
                 'id': 'published',
                 'xforms': user_xforms,
                 'title': _(u"Published Forms"),
-                'small': _("Export, map, and view submissions.")
+                'small': _(" Export, map, and view submissions.")
             },
             {
                 'id': 'shared',

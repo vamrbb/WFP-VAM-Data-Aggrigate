@@ -150,7 +150,7 @@ function createTable(canEdit)
     dataContainer.append(topStatusNavRows);
 
     if(canEdit === true){
-        var editDelete = '<div class="row"><div class="span6"><a id="title_edit" href="#kate" class="btn btn-small bind-edit disabled">' + gettext("edit") + '</a>&nbsp;<a href="#"class="btn btn-small btn-danger">' + gettext("Delete") + '</a></div></div>';
+        var editDelete = '<div class="row"><div class="span6"><a href="#"class="btn btn-small btn-danger">' + gettext("Delete") + '</a></div></div>';
         dataContainer.append(editDelete);
     }
     var notesSection = '<div id="notes" style="display: none; margin: 10px"> \
