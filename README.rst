@@ -1,59 +1,77 @@
-Ona Platform
-=================
-Collect, Analyze and Share Data!
+#### WFP GeoODK Aggregate
 
-.. image:: https://secure.travis-ci.org/onaio/onadata.png?branch=master
-  :target: http://travis-ci.org/onaio/onadata
+# Ubuntu installation instructions
+## Prepare Os
 
-About
------
+    sudo apt-get update
+    sudo apt-get install  postgresql-9.3-postgis-2.1 binutils libproj-dev gdal-bin memcached libmemcached-dev build-essential python-pip python-virtualenv python-dev git libssl-dev libpq-dev gfortran libatlas-base-dev libjpeg-dev libxml2-dev libxslt-dev zlib1g-dev python-software-properties ghostscript python-celery python-sphinx openjdk-7-jdk openjdk-7-jre postgresql-9.3-postgis-2.1 postgresql-9.3-postgis-2.1-scripts
 
-Ona is derived from the excellent `formhub <http://github.com/SEL-Columbia/formhub>`_ platform developed by the Sustainable Engineering Lab at Columbia University.
+## Database setup
+Replace username and db name accordingly.
 
-Installation
-------------
-Please read the `Installation and Deployment Guide <https://github.com/SEL-Columbia/formhub/wiki/Installation-and-Deployment>`_.
+    sudo su postgres -c "psql -c \"CREATE USER onadata WITH PASSWORD 'onadata';\""
+    sudo su postgres -c "psql -c \"CREATE DATABASE onadata OWNER onadata;\""
+    sudo su postgres -c "psql -d onadata -c \"CREATE EXTENSION IF NOT EXISTS postgis;\""
+    sudo su postgres -c "psql -d onadata -c \"CREATE EXTENSION IF NOT EXISTS postgis;\""
+    sudo su postgres -c "psql -d onadata -c \"CREATE EXTENSION IF NOT EXISTS postgis_topology;\""
 
-Contributing
-------------
+## Get the code
+    git clone https://github.com/onaio/onadata.git onadata
+    cd onadata/
 
-If you would like to contribute code please read
-`Contributing Code to Ona Data <https://github.com/onaio/onadata/wiki/Contributing-Code-to-OnaData>`_.
+## Create python virtual environment and activate
+    mkdir ~/.virtualenvs
+    virtualenv ~/.virtualenvs/onadata
+    source ~/.virtualenvs/onadata/bin/activate
 
-Code Structure
---------------
+## Install required python packages
+    pip install -r requirements/base.pip --allow-all-external
+    pip install numpy pandas==0.12.0
 
-* **logger** - This app serves XForms to and receives submissions from
-  ODK Collect and Enketo.
+## Set local_settings.py, update it accordingly
+    cp script/local_settings.py local_settings.py
 
-* **viewer** - This app provides a csv and xls export of the data stored in
-  logger. This app uses a data dictionary as produced by pyxform. It also
-  provides a map and single survey view.
+## Initial db setup
+    python manage.py syncdb --noinput
+    python manage.py migrate
 
-* **main** - This app is the glue that brings logger and viewer
-  together.
+## compile api docs
+    cd docs
+    make html
+    cd ..
 
-Localization
-------------
+## copy static files to static dir
+    python manage.py collectstatic --noinput
+    python manage.py createsuperuser
 
-To generate a locale from scratch (ex. Spanish)
+## Setup uwsgi init script
+    pip install uwsgi
+    # edit uwsgi.ini accrodingly, change paths, user among other parmas
+    sudo cp script/etc/init/onadata.conf /etc/init/onadata.conf
+    # start the onadata service
+    sudo start onadata
+    # check that it started ok
+    # cat /path/to/onadata.log
 
-.. code-block:: sh
+## Setup celery service
+    sudo apt-get install rabbitmq-server
+    # edit script/etc/default/celeryd-ona with correct paths and user, group
+    sudo cp script/etc/default/celeryd-ona /etc/default/celeryd-ona
+    # copy init script celeryd-ona
+    sudo cp script/etc/init.d/celeryd-ona /etc/init.d/celeryd-ona
+    sudo chmod +x /etc/init.d/celeryd-ona
+    sudo update-rc.d -f celeryd-ona defaults
+    sudo service celeryd-ona start
+    # confirm that the service started successfully
+    cat /tmp/w1-ona.log
 
-    $ django-admin.py makemessages -l es -e py,html,email,txt ;
-    $ for app in {main,viewer} ; do cd onadata/apps/${app} && django-admin.py makemessages -d djangojs -l es && cd - ; done
+## Setup nginx
+    sudo apt-get install nginx
+    sudo cp script/etc/nginx/sites-available/onadata /etc/nginx/sites-available/onadata
+    sudo ln -s /etc/nginx/sites-available/onadata /etc/nginx/sites-enabled/onadata
+    # update and test /etc/nginx/sites-available/onadata
+    sudo service nginx configtest
+    # remove default nginx server config
+    sudo unlink /etc/nginx/sites-enabled/default
+    sudo service nginx restart
 
-To update PO files
-
-.. code-block:: sh
-
-    $ django-admin.py makemessages -a ;
-    $ for app in {main,viewer} ; do cd onadata/apps/${app} && django-admin.py makemessages -d djangojs -a && cd - ; done
-
-To compile MO files and update live translations
-
-.. code-block:: sh
-
-    $ django-admin.py compilemessages ;
-    $ for app in {main,viewer} ; do cd onadata/apps/${app} && django-admin.py compilemessages && cd - ; done
-    
