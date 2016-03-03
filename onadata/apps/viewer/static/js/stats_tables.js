@@ -265,6 +265,7 @@
             var field = this.model.get('selected_field');
 
             Backbone.View.prototype.initialize.apply(this, arguments);
+	field.set("name",field.get("xpath"))
 
             // Do we use the XML value (if selected language is -1) or the language
             var selected_language = this.model.get('selected_language');
@@ -279,6 +280,7 @@
 
             // determine column type based on field type
             var columnDef = {name: field.get('name'), label: "Answers", editable: false, cell: "string"}
+
             if(field.isA(FH.types.INTEGER || field.isA(FH.types.DECIMAL))) {
                 columnDef.sortValue = function(model, fieldId) {
                     var func = FH.ParseFunctionMapping[field.get(FH.constants.TYPE)];
@@ -329,8 +331,7 @@
         render: function () {
             var field = this.model.get('selected_field'),
                 selected_language = this.model.get('selected_language'),
-                label = selected_language === '-1'?field.get('name'):field.get('label', selected_language);
-
+                label = selected_language === '-1'?field.get('label'):field.get('label', selected_language);
             this.$el.empty()
                 .append('<h3>'+ label +'<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button></h3>');
 
